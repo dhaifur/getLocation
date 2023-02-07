@@ -5,13 +5,13 @@ import 'package:stacked_services/stacked_services.dart';
 import 'dart:math';
 import 'package:vector_math/vector_math.dart';
 
-import '../app/app.locator.dart';
+import '../../app/app.locator.dart';
 
 class HomeViewModel extends BaseViewModel {
   Position? current_position;
-  var target_latitude = -7.7769602;
-  var target_longitude = 110.3835469;
-  var r = 6371000;
+  var targetLat = -7.777225675172034 * 0.0174533;
+  var targetLon = 110.38356833500242 * 0.0174533;
+  var R = 6317;
   var distanceInMeters = 0.0;
   final _navigationService = locator<NavigationService>();
 
@@ -49,16 +49,6 @@ class HomeViewModel extends BaseViewModel {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       current_position = position;
-      print(current_position);
-      var phi_1 = radians(current_position!.latitude);
-      var phi_2 = radians(target_latitude);
-      var delta_phi = radians(target_latitude - current_position!.latitude);
-      var delta_lambda =
-          radians(target_longitude - current_position!.longitude);
-      var a = pow(sin(delta_phi / 2.0), 2) +
-          cos(phi_1) * cos(phi_2) * pow(sin(delta_lambda / 2.0), 2);
-      var c = 2 * atan2(sqrt(a), sqrt(1 - a));
-      distanceInMeters = r * c;
       notifyListeners();
     }).catchError((e) {
       debugPrint(e);
@@ -71,7 +61,13 @@ class HomeViewModel extends BaseViewModel {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       current_position = position;
-
+      print(current_position!.latitude);
+      print(current_position!.longitude);
+      var currentLat = position.latitude * 0.0174533;
+      var currentLon = position.longitude * 0.0174533;
+      var a = (targetLon - currentLon) * cos((currentLat + targetLat) / 2);
+      var b = targetLat - currentLat;
+      distanceInMeters = (sqrt(pow(a, 2) + pow(b, 2)) * R) * 1000;
       notifyListeners();
     }).catchError((e) {
       debugPrint(e);

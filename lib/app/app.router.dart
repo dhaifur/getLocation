@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import '../ui/home.dart';
+import '../ui/home/home.dart';
 
 class Routes {
   static const String homeView = '/';

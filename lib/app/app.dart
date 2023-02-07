@@ -1,4 +1,4 @@
-import 'package:hello_app/ui/home.dart';
+import 'package:hello_app/ui/home/home.dart';
 import 'package:stacked_core/stacked_core.dart';
 import 'package:stacked_services/stacked_services.dart';
 
